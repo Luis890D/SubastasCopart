@@ -29,6 +29,18 @@ const VehiculoController = {
   },
 
   /**
+   * GET /api/vehiculos/mis-pujas (requiere auth)
+   */
+  async getMisPujas(req, res, next) {
+    try {
+      const subastas = await PujaModel.findByUsuario(req.user.id);
+      res.json({ success: true, data: subastas });
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  /**
    * GET /api/vehiculos/:id
    */
   async getById(req, res, next) {

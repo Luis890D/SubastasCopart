@@ -10,6 +10,7 @@ import RegisterPage          from './pages/RegisterPage';
 import VehiculoDetailPage    from './pages/VehiculoDetailPage';
 import PublicarVehiculoPage  from './pages/PublicarVehiculoPage';
 import MisPublicacionesPage  from './pages/MisPublicacionesPage';
+import MisPujasPage          from './pages/MisPujasPage';
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
             <Route element={<PrivateRoute />}>
               <Route path="/publicar"           element={<PublicarVehiculoPage />} />
               <Route path="/mis-publicaciones"  element={<MisPublicacionesPage />} />
+              <Route path="/mis-pujas"          element={<MisPujasPage />} />
             </Route>
 
             {/* 404 */}

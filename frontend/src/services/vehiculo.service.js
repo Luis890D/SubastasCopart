@@ -9,6 +9,7 @@ export const vehiculoService = {
   },
   getById:     (id)        => api.get(`/vehiculos/${id}`),
   getMios:     ()          => api.get('/vehiculos/mis-publicaciones'),
+  getMisPujas: ()          => api.get('/vehiculos/mis-pujas'),
   create:      (formData)  => {
     const token = localStorage.getItem('token');
     return fetch(`${import.meta.env.VITE_API_URL}/vehiculos`, {

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { vehiculoService } from '../services/vehiculo.service';
 import { socketService }   from '../services/socket.service';
 import { useAuth }         from '../context/AuthContext';
@@ -183,7 +183,14 @@ const VehiculoDetailPage = () => {
                     <span className="puja-hint">(+10% sobre oferta actual)</span>
                   </div>
                   {pujaError && <div className="alert alert-error">{pujaError}</div>}
-                  {pujaOk    && <div className="alert alert-success">{pujaOk}</div>}
+                  {pujaOk && (
+                    <div className="alert alert-success" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
+                      <span>{pujaOk}</span>
+                      <Link to="/mis-pujas" className="btn btn-sm btn-outline" style={{ background: '#fff', fontSize: '0.8rem', padding: '0.25rem 0.6rem' }}>
+                        Ver en Mis Pujas →
+                      </Link>
+                    </div>
+                  )}
                   <div className="puja-input-row">
                     <span className="puja-currency">Q.</span>
                     <input

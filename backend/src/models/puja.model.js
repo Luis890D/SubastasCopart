@@ -25,6 +25,46 @@ const PujaModel = {
   },
 
   /**
+   * Obtiene todas las subastas en las que un usuario ha pujado con detalles completos
+   */
+  async findByUsuario(usuario_id) {
+    const pool = await getPool();
+    const result = await pool.request()
+      .input('usuario_id', sql.Int, usuario_id)
+      .query(`
+        SELECT 
+          v.id,
+          v.marca,
+          v.modelo,
+          v.anio,
+          v.tipo_articulo,
+          v.combustible,
+          v.transmision,
+          v.tren_manejo,
+          v.nivel_danio,
+          v.precio_base,
+          v.fecha_inicio,
+          v.fecha_fin,
+          (SELECT TOP 1 url FROM FotosVehiculo_7145 WHERE vehiculo_id = v.id ORDER BY orden ASC) AS foto_portada,
+          (SELECT COUNT(*) FROM Pujas_7145 WHERE vehiculo_id = v.id) AS total_pujas,
+          (SELECT TOP 1 monto FROM Pujas_7145 WHERE vehiculo_id = v.id ORDER BY monto DESC) AS puja_actual,
+          MAX(p.monto) AS mi_puja_maxima,
+          MAX(p.fecha) AS mi_ultima_puja_fecha,
+          COUNT(p.id)  AS mis_pujas_count,
+          (CASE WHEN (SELECT TOP 1 usuario_id FROM Pujas_7145 WHERE vehiculo_id = v.id ORDER BY monto DESC) = @usuario_id THEN 1 ELSE 0 END) AS es_ganador
+        FROM ${TABLE} p
+        INNER JOIN ${VEH_TBL} v ON p.vehiculo_id = v.id
+        WHERE p.usuario_id = @usuario_id
+        GROUP BY 
+          v.id, v.marca, v.modelo, v.anio, v.tipo_articulo, v.combustible,
+          v.transmision, v.tren_manejo, v.nivel_danio, v.precio_base,
+          v.fecha_inicio, v.fecha_fin
+        ORDER BY MAX(p.fecha) DESC
+      `);
+    return result.recordset;
+  },
+
+  /**
    * Puja más alta de un vehículo
    */
   async findMax(vehiculo_id) {

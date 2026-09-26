@@ -29,7 +29,8 @@ const Navbar = () => {
           {isAuthenticated && (
             <>
               <Link to="/publicar" className="nav-link">Publicar</Link>
-              <Link to="/mis-publicaciones" className="nav-link">Mis Subastas</Link>
+              <Link to="/mis-publicaciones" className="nav-link">Mis Vehículos</Link>
+              <Link to="/mis-pujas" className="nav-link highlight-link">🏷️ Mis Pujas</Link>
             </>
           )}
         </nav>
@@ -68,7 +69,8 @@ const Navbar = () => {
           {isAuthenticated && (
             <>
               <Link to="/publicar"          onClick={() => setMenuOpen(false)} className="mobile-link">➕ Publicar Vehículo</Link>
-              <Link to="/mis-publicaciones" onClick={() => setMenuOpen(false)} className="mobile-link">📋 Mis Subastas</Link>
+              <Link to="/mis-publicaciones" onClick={() => setMenuOpen(false)} className="mobile-link">📋 Mis Vehículos Publicados</Link>
+              <Link to="/mis-pujas"         onClick={() => setMenuOpen(false)} className="mobile-link">🏷️ Mis Pujas / Ofertas</Link>
             </>
           )}
           <hr className="divider" />

@@ -15,6 +15,9 @@ router.get('/', VehiculoController.getAll);
 // GET  /api/vehiculos/mis-publicaciones  — requiere auth
 router.get('/mis-publicaciones', auth, VehiculoController.getMisPublicaciones);
 
+// GET  /api/vehiculos/mis-pujas  — requiere auth
+router.get('/mis-pujas', auth, VehiculoController.getMisPujas);
+
 // GET  /api/vehiculos/:id  — público
 router.get('/:id', VehiculoController.getById);
 
