@@ -1,13 +1,8 @@
 const { Router } = require('express');
 const { body }   = require('express-validator');
 
-const resolve = (m) => {
-  let res = m;
-  while (res && typeof res === 'object' && res.default && typeof res !== 'function') {
-    res = res.default;
-  }
-  return res;
-};
+const resolve = (m) => (m && m.default && m !== m.default ? m.default : m);
+
 
 const VehiculoController = resolve(require('../controllers/vehiculo.controller'));
 const auth               = resolve(require('../middlewares/auth.middleware'));

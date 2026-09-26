@@ -1,12 +1,7 @@
 const { Router } = require('express');
 
-const resolve = (m) => {
-  let res = m;
-  while (res && typeof res === 'object' && res.default && typeof res !== 'function') {
-    res = res.default;
-  }
-  return res;
-};
+const resolve = (m) => (m && m.default && m !== m.default ? m.default : m);
+
 
 const UsuarioController = resolve(require('../controllers/usuario.controller'));
 const auth              = resolve(require('../middlewares/auth.middleware'));
