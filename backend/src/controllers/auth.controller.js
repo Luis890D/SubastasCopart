@@ -8,23 +8,17 @@ const AuthController = {
    */
   async register(req, res, next) {
     try {
-      const { nombre, correo, password } = req.body;
+      const { nombre, apellido, correo, telefono, password } = req.body;
 
-      // Verificar si el correo ya existe
       const existe = await UsuarioModel.findByCorreo(correo);
       if (existe) {
         return res.status(409).json({ success: false, error: 'El correo ya está registrado' });
       }
 
-      // Hash de la contraseña
-      const hash = await bcrypt.hash(password, 12);
+      const hash    = await bcrypt.hash(password, 12);
+      const usuario = await UsuarioModel.create({ nombre, apellido, correo, telefono, password: hash });
 
-      const usuario = await UsuarioModel.create({ nombre, correo, password: hash });
-
-      // Quitar el password del response
-      const { password: _, ...usuarioSafe } = usuario;
-
-      return res.status(201).json({ success: true, data: usuarioSafe });
+      return res.status(201).json({ success: true, data: usuario });
     } catch (err) {
       next(err);
     }
@@ -48,14 +42,26 @@ const AuthController = {
       }
 
       const token = jwt.sign(
-        { id: usuario.id, correo: usuario.correo },
+        { id: usuario.id, correo: usuario.correo, nombre: usuario.nombre },
         process.env.JWT_SECRET,
         { expiresIn: process.env.JWT_EXPIRES_IN || '24h' }
       );
 
       const { password: _, ...usuarioSafe } = usuario;
-
       return res.json({ success: true, token, data: usuarioSafe });
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  /**
+   * GET /api/auth/me  — perfil del usuario autenticado
+   */
+  async me(req, res, next) {
+    try {
+      const usuario = await UsuarioModel.findById(req.user.id);
+      if (!usuario) return res.status(404).json({ success: false, error: 'Usuario no encontrado' });
+      res.json({ success: true, data: usuario });
     } catch (err) {
       next(err);
     }

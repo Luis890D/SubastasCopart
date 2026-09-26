@@ -1,15 +1,16 @@
 const { Router } = require('express');
 const { body }   = require('express-validator');
-const AuthController  = require('../controllers/auth.controller');
-const validate        = require('../middlewares/validate.middleware');
+const AuthController = require('../controllers/auth.controller');
+const auth           = require('../middlewares/auth.middleware');
+const validate       = require('../middlewares/validate.middleware');
 
 const router = Router();
 
 // POST /api/auth/register
-router.post(
-  '/register',
+router.post('/register',
   [
     body('nombre').notEmpty().withMessage('El nombre es requerido'),
+    body('apellido').notEmpty().withMessage('El apellido es requerido'),
     body('correo').isEmail().withMessage('Correo inválido'),
     body('password').isLength({ min: 6 }).withMessage('La contraseña debe tener al menos 6 caracteres'),
   ],
@@ -18,8 +19,7 @@ router.post(
 );
 
 // POST /api/auth/login
-router.post(
-  '/login',
+router.post('/login',
   [
     body('correo').isEmail().withMessage('Correo inválido'),
     body('password').notEmpty().withMessage('La contraseña es requerida'),
@@ -27,5 +27,8 @@ router.post(
   validate,
   AuthController.login
 );
+
+// GET /api/auth/me  (requiere auth)
+router.get('/me', auth, AuthController.me);
 
 module.exports = router;

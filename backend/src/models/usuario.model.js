@@ -1,100 +1,79 @@
 const { getPool, sql } = require('../config/db');
 
+const TABLE = 'Usuarios_7145';
+
 /**
- * Modelo Usuario - Acceso a datos para la tabla Usuarios
+ * Modelo Usuario — tabla Usuarios_7145
  */
 const UsuarioModel = {
-  /**
-   * Obtiene todos los usuarios
-   * @returns {Promise<Array>}
-   */
   async findAll() {
     const pool = await getPool();
-    const result = await pool.request().query('SELECT * FROM Usuarios');
+    const result = await pool.request()
+      .query(`SELECT id, nombre, apellido, correo, telefono, created_at FROM ${TABLE}`);
     return result.recordset;
   },
 
-  /**
-   * Obtiene un usuario por ID
-   * @param {number} id
-   * @returns {Promise<Object|null>}
-   */
   async findById(id) {
     const pool = await getPool();
-    const result = await pool
-      .request()
+    const result = await pool.request()
       .input('id', sql.Int, id)
-      .query('SELECT * FROM Usuarios WHERE id = @id');
+      .query(`SELECT id, nombre, apellido, correo, telefono, created_at FROM ${TABLE} WHERE id = @id`);
     return result.recordset[0] || null;
   },
 
-  /**
-   * Obtiene un usuario por correo electrónico
-   * @param {string} correo
-   * @returns {Promise<Object|null>}
-   */
   async findByCorreo(correo) {
     const pool = await getPool();
-    const result = await pool
-      .request()
+    const result = await pool.request()
       .input('correo', sql.VarChar(255), correo)
-      .query('SELECT * FROM Usuarios WHERE correo = @correo');
+      .query(`SELECT * FROM ${TABLE} WHERE correo = @correo`);
     return result.recordset[0] || null;
   },
 
   /**
-   * Crea un nuevo usuario
-   * @param {{ nombre, correo, password }} data
-   * @returns {Promise<Object>}
+   * Crea un usuario (registro)
+   * @param {{ nombre, apellido, correo, telefono, password }} data
    */
-  async create({ nombre, correo, password }) {
+  async create({ nombre, apellido, correo, telefono, password }) {
     const pool = await getPool();
-    const result = await pool
-      .request()
-      .input('nombre',   sql.VarChar(150), nombre)
+    const result = await pool.request()
+      .input('nombre',   sql.VarChar(100), nombre)
+      .input('apellido', sql.VarChar(100), apellido)
       .input('correo',   sql.VarChar(255), correo)
+      .input('telefono', sql.VarChar(20),  telefono || null)
       .input('password', sql.VarChar(255), password)
       .query(`
-        INSERT INTO Usuarios (nombre, correo, password)
-        OUTPUT INSERTED.*
-        VALUES (@nombre, @correo, @password)
+        INSERT INTO ${TABLE} (nombre, apellido, correo, telefono, password)
+        OUTPUT INSERTED.id, INSERTED.nombre, INSERTED.apellido,
+               INSERTED.correo, INSERTED.telefono, INSERTED.created_at
+        VALUES (@nombre, @apellido, @correo, @telefono, @password)
       `);
     return result.recordset[0];
   },
 
-  /**
-   * Actualiza un usuario por ID
-   * @param {number} id
-   * @param {{ nombre, correo }} data
-   * @returns {Promise<Object|null>}
-   */
-  async update(id, { nombre, correo }) {
+  async update(id, { nombre, apellido, correo, telefono }) {
     const pool = await getPool();
-    const result = await pool
-      .request()
-      .input('id',     sql.Int,         id)
-      .input('nombre', sql.VarChar(150), nombre)
-      .input('correo', sql.VarChar(255), correo)
+    const result = await pool.request()
+      .input('id',       sql.Int,         id)
+      .input('nombre',   sql.VarChar(100), nombre)
+      .input('apellido', sql.VarChar(100), apellido)
+      .input('correo',   sql.VarChar(255), correo)
+      .input('telefono', sql.VarChar(20),  telefono || null)
       .query(`
-        UPDATE Usuarios
-        SET nombre = @nombre, correo = @correo
-        OUTPUT INSERTED.*
+        UPDATE ${TABLE}
+        SET nombre = @nombre, apellido = @apellido,
+            correo = @correo, telefono = @telefono
+        OUTPUT INSERTED.id, INSERTED.nombre, INSERTED.apellido,
+               INSERTED.correo, INSERTED.telefono
         WHERE id = @id
       `);
     return result.recordset[0] || null;
   },
 
-  /**
-   * Elimina un usuario por ID
-   * @param {number} id
-   * @returns {Promise<boolean>}
-   */
   async delete(id) {
     const pool = await getPool();
-    const result = await pool
-      .request()
+    const result = await pool.request()
       .input('id', sql.Int, id)
-      .query('DELETE FROM Usuarios WHERE id = @id');
+      .query(`DELETE FROM ${TABLE} WHERE id = @id`);
     return result.rowsAffected[0] > 0;
   },
 };
