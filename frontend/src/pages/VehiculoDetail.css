@@ -1,0 +1,49 @@
+.vd-page {}
+.vd-header { margin-bottom: 1.5rem; }
+.vd-title  { margin-bottom: .5rem; }
+.vd-meta   { display: flex; gap: .5rem; flex-wrap: wrap; }
+
+.vd-layout { display: grid; grid-template-columns: 1fr 380px; gap: 2rem; align-items: start; }
+.vd-left   { display: flex; flex-direction: column; gap: 1rem; }
+.vd-right  { display: flex; flex-direction: column; gap: 1rem; position: sticky; top: 88px; }
+
+/* Ficha técnica */
+.ficha-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; }
+.ficha-item { display: flex; flex-direction: column; gap: .15rem; padding: .6rem .75rem; background: var(--bg-alt); border-radius: var(--radius-sm); }
+.ficha-key  { font-size: .72rem; font-weight: 700; text-transform: uppercase; color: var(--text-light); letter-spacing: .05em; }
+.ficha-val  { font-size: .95rem; font-weight: 600; color: var(--text-heading); }
+
+/* Panel de puja */
+.puja-panel {}
+.puja-header { text-align: center; margin-bottom: 1rem; }
+.puja-label  { font-size: .8rem; font-weight: 700; text-transform: uppercase; color: var(--text-light); display: block; margin-bottom: .25rem; }
+.puja-monto  { display: block; font-size: 2.2rem; font-weight: 800; color: var(--primary); line-height: 1; }
+.puja-base   { display: block; font-size: .85rem; color: var(--text-light); margin-top: .25rem; }
+
+.badge-estado { display: block; text-align: center; padding: .65rem 1rem; border-radius: var(--radius-md); font-weight: 700; font-size: .9rem; margin: .5rem 0; }
+.badge-ganando { background: var(--green-bg); color: var(--green); border: 1px solid #86efac; }
+.badge-superado{ background: var(--red-bg);   color: var(--red);   border: 1px solid #fca5a5; }
+
+.puja-form {}
+.puja-minimo { font-size: .85rem; color: var(--text-light); margin-bottom: .75rem; }
+.puja-minimo strong { color: var(--primary); }
+.puja-hint   { font-size: .75rem; display: block; margin-top: .1rem; }
+.puja-input-row { display: flex; gap: .5rem; align-items: center; }
+.puja-currency { font-size: 1.1rem; font-weight: 700; color: var(--text-heading); }
+.puja-input  { flex: 1; }
+
+/* Historial pujas */
+.pujas-lista { display: flex; flex-direction: column; gap: .4rem; }
+.puja-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: .5rem .75rem; border-radius: var(--radius-sm);
+  background: var(--bg-alt); font-size: .88rem;
+}
+.puja-top { background: var(--primary-light); border: 1px solid rgba(249,115,22,.25); }
+.puja-row-monto { font-weight: 700; color: var(--primary); }
+
+@media (max-width: 900px) {
+  .vd-layout { grid-template-columns: 1fr; }
+  .vd-right  { position: static; }
+  .ficha-grid { grid-template-columns: 1fr; }
+}

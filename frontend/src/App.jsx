@@ -1,39 +1,54 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider }  from './context/AuthContext';
 import PrivateRoute      from './components/PrivateRoute';
 import Navbar            from './components/Navbar';
 
 // Pages
-import HomePage          from './pages/HomePage';
-import SubastasPage      from './pages/SubastasPage';
-import SubastaDetailPage from './pages/SubastaDetailPage';
-import LoginPage         from './pages/LoginPage';
-import RegisterPage      from './pages/RegisterPage';
-import DashboardPage     from './pages/DashboardPage';
+import HomePage              from './pages/HomePage';
+import LoginPage             from './pages/LoginPage';
+import RegisterPage          from './pages/RegisterPage';
+import VehiculoDetailPage    from './pages/VehiculoDetailPage';
+import PublicarVehiculoPage  from './pages/PublicarVehiculoPage';
+import MisPublicacionesPage  from './pages/MisPublicacionesPage';
 
 function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
         <Navbar />
-        <main>
+        <main style={{ flex: 1 }}>
           <Routes>
-            {/* Rutas públicas */}
-            <Route path="/"              element={<HomePage />} />
-            <Route path="/subastas"      element={<SubastasPage />} />
-            <Route path="/subastas/:id"  element={<SubastaDetailPage />} />
-            <Route path="/login"         element={<LoginPage />} />
-            <Route path="/register"      element={<RegisterPage />} />
+            {/* Públicas */}
+            <Route path="/"                element={<HomePage />} />
+            <Route path="/vehiculos/:id"   element={<VehiculoDetailPage />} />
+            <Route path="/login"           element={<LoginPage />} />
+            <Route path="/register"        element={<RegisterPage />} />
 
-            {/* Rutas protegidas */}
+            {/* Protegidas */}
             <Route element={<PrivateRoute />}>
-              <Route path="/dashboard" element={<DashboardPage />} />
+              <Route path="/publicar"           element={<PublicarVehiculoPage />} />
+              <Route path="/mis-publicaciones"  element={<MisPublicacionesPage />} />
             </Route>
 
             {/* 404 */}
-            <Route path="*" element={<h1>404 - Página no encontrada</h1>} />
+            <Route path="*" element={
+              <div className="loading-page">
+                <span style={{ fontSize:'4rem' }}>🔍</span>
+                <h2>404 — Página no encontrada</h2>
+                <a href="/" className="btn btn-primary mt-2">Volver al inicio</a>
+              </div>
+            } />
           </Routes>
         </main>
+
+        {/* Footer */}
+        <footer style={{
+          background: 'var(--secondary)', color: '#fff',
+          padding: '1.5rem', textAlign: 'center', fontSize: '.85rem',
+          opacity: .85
+        }}>
+          🚗 Subastas Copart © {new Date().getFullYear()} — Plataforma de subastas en tiempo real
+        </footer>
       </BrowserRouter>
     </AuthProvider>
   );

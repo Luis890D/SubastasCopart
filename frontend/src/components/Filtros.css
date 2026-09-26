@@ -1,0 +1,8 @@
+.filtros-panel { border-radius: var(--radius-lg); overflow: hidden; }
+.filtros-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 1rem 1.25rem; font-weight: 700; font-size: .95rem;
+  background: var(--secondary); color: #fff; cursor: pointer; user-select: none;
+}
+.filtros-toggle { font-size: .8rem; }
+.filtros-body { padding: 1.25rem; display: flex; flex-direction: column; gap: 1rem; }
