@@ -17,7 +17,12 @@ const Carrusel = ({ fotos = [] }) => {
     <div className="carrusel">
       {/* Imagen principal */}
       <div className="carrusel-main">
-        <img src={src(fotos[idx])} alt={`Foto ${idx + 1}`} className="carrusel-img" />
+        <img
+          src={src(fotos[idx])}
+          alt={`Foto ${idx + 1}`}
+          className="carrusel-img"
+          onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=800&q=80'; }}
+        />
         {fotos.length > 1 && (
           <>
             <button className="carrusel-btn carrusel-prev" onClick={prev}>‹</button>

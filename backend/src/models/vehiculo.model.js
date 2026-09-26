@@ -8,21 +8,55 @@ const FOTOS_TABLE = 'FotosVehiculo_7145';
  */
 const VehiculoModel = {
   /**
-   * Listar vehículos con filtros opcionales
+   * Listar vehículos con filtros opcionales (búsqueda escrita y por lista)
    */
-  async findAll({ marca, modelo, anio, combustible, nivel_danio, tren_manejo } = {}) {
+  async findAll({ busqueda, marca, modelo, anio, combustible, nivel_danio, tren_manejo, orden } = {}) {
     const pool = await getPool();
     const req  = pool.request();
     const where = [];
 
-    if (marca)       { req.input('marca',       sql.VarChar(100), marca);       where.push('v.marca = @marca'); }
-    if (modelo)      { req.input('modelo',      sql.VarChar(100), modelo);      where.push('v.modelo = @modelo'); }
-    if (anio)        { req.input('anio',        sql.Int,          parseInt(anio)); where.push('v.anio = @anio'); }
-    if (combustible) { req.input('combustible', sql.VarChar(50),  combustible); where.push('v.combustible = @combustible'); }
-    if (nivel_danio) { req.input('nivel_danio', sql.VarChar(10),  nivel_danio); where.push('v.nivel_danio = @nivel_danio'); }
-    if (tren_manejo) { req.input('tren_manejo', sql.VarChar(10),  tren_manejo); where.push('v.tren_manejo = @tren_manejo'); }
+    if (busqueda && busqueda.trim()) {
+      req.input('busqueda', sql.VarChar(100), `%${busqueda.trim()}%`);
+      where.push('(v.marca LIKE @busqueda OR v.modelo LIKE @busqueda OR CAST(v.anio AS VARCHAR) LIKE @busqueda OR v.tipo_articulo LIKE @busqueda)');
+    }
+
+    if (marca && marca.trim()) {
+      req.input('marca', sql.VarChar(100), `%${marca.trim()}%`);
+      where.push('v.marca LIKE @marca');
+    }
+    if (modelo && modelo.trim()) {
+      req.input('modelo', sql.VarChar(100), `%${modelo.trim()}%`);
+      where.push('v.modelo LIKE @modelo');
+    }
+    if (anio) {
+      req.input('anio', sql.Int, parseInt(anio));
+      where.push('v.anio = @anio');
+    }
+    if (combustible && combustible.trim()) {
+      req.input('combustible', sql.VarChar(50), combustible.trim());
+      where.push('v.combustible = @combustible');
+    }
+    if (nivel_danio && nivel_danio.trim()) {
+      req.input('nivel_danio', sql.VarChar(10), nivel_danio.trim());
+      where.push('v.nivel_danio = @nivel_danio');
+    }
+    if (tren_manejo && tren_manejo.trim()) {
+      req.input('tren_manejo', sql.VarChar(10), tren_manejo.trim());
+      where.push('v.tren_manejo = @tren_manejo');
+    }
 
     const whereClause = where.length ? `WHERE ${where.join(' AND ')}` : '';
+
+    let orderBy = 'ORDER BY v.created_at DESC';
+    if (orden === 'precio_asc') {
+      orderBy = 'ORDER BY v.precio_base ASC';
+    } else if (orden === 'precio_desc') {
+      orderBy = 'ORDER BY v.precio_base DESC';
+    } else if (orden === 'tiempo_fin') {
+      orderBy = 'ORDER BY v.fecha_fin ASC';
+    } else if (orden === 'anio_desc') {
+      orderBy = 'ORDER BY v.anio DESC';
+    }
 
     const result = await req.query(`
       SELECT v.*,
@@ -34,7 +68,7 @@ const VehiculoModel = {
       FROM ${TABLE} v
       INNER JOIN Usuarios_7145 u ON v.usuario_id = u.id
       ${whereClause}
-      ORDER BY v.created_at DESC
+      ${orderBy}
     `);
     return result.recordset;
   },

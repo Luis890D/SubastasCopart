@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './VehiculoCard.css';
 
@@ -27,18 +28,35 @@ const VehiculoCard = ({ vehiculo }) => {
     tren_manejo, combustible,
   } = vehiculo;
 
+  const [imgError, setImgError] = useState(false);
+
   const badge  = BADGE[nivel_danio] || BADGE.verde;
   const status = calcStatus(fecha_inicio, fecha_fin);
-  const imgSrc = foto_portada ? `${API_URL}${foto_portada}` : null;
+
+  const imgSrc = foto_portada
+    ? (foto_portada.startsWith('http') ? foto_portada : `${API_URL}${foto_portada}`)
+    : null;
 
   return (
     <Link to={`/vehiculos/${id}`} className="vehiculo-card card">
       {/* Imagen */}
       <div className="vc-image-wrap">
-        {imgSrc
-          ? <img src={imgSrc} alt={`${marca} ${modelo}`} className="vc-image" />
-          : <div className="vc-image-placeholder">🚗</div>
-        }
+        {imgSrc && !imgError ? (
+          <img
+            src={imgSrc}
+            alt={`${marca} ${modelo}`}
+            className="vc-image"
+            loading="lazy"
+            onError={() => setImgError(true)}
+          />
+        ) : (
+          <div className="vc-image-placeholder">
+            <span>🚗</span>
+            <small style={{ fontSize: '0.75rem', color: 'var(--text-light)', marginTop: '4px' }}>
+              {marca} {modelo}
+            </small>
+          </div>
+        )}
         <span className={`vc-status ${status.cls}`}>{status.label}</span>
         <span className={`badge ${badge.cls} vc-badge`}>{badge.label}</span>
       </div>
