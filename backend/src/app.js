@@ -1,8 +1,10 @@
+require('dotenv').config();
 const expressRaw = require('express');
 const corsRaw    = require('cors');
 const morganRaw  = require('morgan');
 const helmetRaw  = require('helmet');
 const path       = require('path');
+
 
 // Helper para compatibilidad de interoperabilidad CJS/ESM con Rolldown / Vercel bundler
 const resolve = (m) => {

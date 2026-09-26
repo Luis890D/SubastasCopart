@@ -15,13 +15,13 @@ const config = {
   options: {
     encrypt: process.env.DB_ENCRYPT !== 'false',
     trustServerCertificate: true, // Siempre true para certificado autofirmado en Azure
-    connectTimeout: 20000,
-    requestTimeout: 20000,
+    connectTimeout: 8000, // 8 segundos max para no exceder timeout de Vercel
+    requestTimeout: 10000,
   },
   pool: {
-    max: 10,
+    max: 5,
     min: 0,
-    idleTimeoutMillis: 30000,
+    idleTimeoutMillis: 10000,
   },
 };
 
