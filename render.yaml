@@ -1,0 +1,33 @@
+services:
+  - type: web
+    name: subastas-copart-backend
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: node src/server.js
+    plan: free
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: DB_USER
+        value: UsuarioEncuestas
+      - key: DB_PASSWORD
+        value: DesaWeb2025$!
+      - key: DB_SERVER
+        value: svr-sql-ctezo.southcentralus.cloudapp.azure.com
+      - key: DB_DATABASE
+        value: db_WebDevUMG
+      - key: DB_PORT
+        value: "1433"
+      - key: DB_ENCRYPT
+        value: "true"
+      - key: DB_TRUST_SERVER_CERT
+        value: "true"
+      - key: JWT_SECRET
+        value: subastas_copart_jwt_secret_2025
+      - key: JWT_EXPIRES_IN
+        value: 24h
+      - key: CORS_ORIGIN
+        value: "*"
