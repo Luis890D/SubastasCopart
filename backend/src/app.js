@@ -21,13 +21,22 @@ app.use(express.urlencoded({ extended: true }));
 // ── Archivos estáticos (imágenes subidas) ─────────────────────────────────────
 app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 
-// ── Rutas API ─────────────────────────────────────────────────────────────────
-app.use('/api/auth',      require('./routes/auth.routes'));
-app.use('/api/usuarios',  require('./routes/usuario.routes'));
-app.use('/api/vehiculos', require('./routes/vehiculo.routes'));
+// ── Rutas API (soporta con y sin prefijo /api para Vercel rewrites) ───────────
+const authRoutes     = require('./routes/auth.routes');
+const usuarioRoutes  = require('./routes/usuario.routes');
+const vehiculoRoutes = require('./routes/vehiculo.routes');
+
+app.use('/api/auth',      authRoutes);
+app.use('/auth',          authRoutes);
+
+app.use('/api/usuarios',  usuarioRoutes);
+app.use('/usuarios',      usuarioRoutes);
+
+app.use('/api/vehiculos', vehiculoRoutes);
+app.use('/vehiculos',     vehiculoRoutes);
 
 // ── Health check ──────────────────────────────────────────────────────────────
-app.get('/api/health', (_req, res) => {
+app.get(['/api/health', '/health'], (_req, res) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
 });
 

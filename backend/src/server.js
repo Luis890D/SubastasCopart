@@ -33,10 +33,12 @@ module.exports = app;
 module.exports.io = io;
 module.exports.server = server;
 
-// ── Iniciar servidor ──────────────────────────────────────────────────────────
-server.listen(PORT, () => {
-  console.log(`\n🚀 Servidor corriendo en http://localhost:${PORT}`);
-  console.log(`🔗 Socket.io activo`);
-  console.log(`📦 Ambiente: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`📅 ${new Date().toLocaleString()}\n`);
-});
+// ── Iniciar servidor (solo si se ejecuta directamente con `node src/server.js`) ─
+if (!process.env.VERCEL && require.main === module) {
+  server.listen(PORT, () => {
+    console.log(`\n🚀 Servidor corriendo en http://localhost:${PORT}`);
+    console.log(`🔗 Socket.io activo`);
+    console.log(`📦 Ambiente: ${process.env.NODE_ENV || 'development'}`);
+    console.log(`📅 ${new Date().toLocaleString()}\n`);
+  });
+}

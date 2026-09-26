@@ -24,9 +24,15 @@ let pool = null;
  * @returns {Promise<sql.ConnectionPool>}
  */
 const getPool = async () => {
-  if (!pool) {
-    pool = await new sql.ConnectionPool(config).connect();
-    console.log('✅ Conectado a SQL Server:', process.env.DB_DATABASE);
+  if (!pool || !pool.connected) {
+    try {
+      pool = await new sql.ConnectionPool(config).connect();
+      console.log('✅ Conectado a SQL Server:', config.database);
+    } catch (err) {
+      pool = null;
+      console.error('❌ Error conectando a SQL Server:', err.message);
+      throw err;
+    }
   }
   return pool;
 };
