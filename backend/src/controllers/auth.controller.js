@@ -43,7 +43,7 @@ const AuthController = {
 
       const token = jwt.sign(
         { id: usuario.id, correo: usuario.correo, nombre: usuario.nombre },
-        process.env.JWT_SECRET,
+        process.env.JWT_SECRET || 'subastas_copart_jwt_secret_2025',
         { expiresIn: process.env.JWT_EXPIRES_IN || '24h' }
       );
 

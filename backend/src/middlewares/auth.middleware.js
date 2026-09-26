@@ -13,7 +13,7 @@ const authMiddleware = (req, res, next) => {
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'subastas_copart_jwt_secret_2025');
     req.user = decoded;
     next();
   } catch (err) {
