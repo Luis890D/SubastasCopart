@@ -3,7 +3,9 @@ import { Link } from 'react-router-dom';
 import { vehiculoService } from '../services/vehiculo.service';
 import './MisPujasPage.css';
 
-const API_URL = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:3000';
+const API_URL = import.meta.env.VITE_API_URL
+  ? import.meta.env.VITE_API_URL.replace('/api', '')
+  : (typeof window !== 'undefined' && window.location.hostname !== 'localhost' ? '' : 'http://localhost:3000');
 
 const BADGE_DANIO = {
   verde:    { label: '🟢 Daño Menor',  cls: 'badge-verde' },

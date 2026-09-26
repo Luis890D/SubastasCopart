@@ -8,7 +8,12 @@ const app = express();
 
 // ── Middlewares globales ──────────────────────────────────────────────────────
 app.use(helmet({ crossOriginResourcePolicy: false })); // permite servir imágenes
-app.use(cors({ origin: process.env.CORS_ORIGIN || '*' }));
+app.use(cors({
+  origin: true, // Refleja el origen de la petición (Vercel, localhost, Render)
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+}));
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

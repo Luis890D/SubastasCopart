@@ -1,5 +1,11 @@
 import { api } from './api';
 
+const API_BASE = import.meta.env.VITE_API_URL
+  ? import.meta.env.VITE_API_URL
+  : (typeof window !== 'undefined' && window.location.hostname !== 'localhost'
+      ? '/api'
+      : 'http://localhost:3000/api');
+
 export const vehiculoService = {
   getAll:  (params = {}) => {
     const query = new URLSearchParams(
@@ -12,7 +18,7 @@ export const vehiculoService = {
   getMisPujas: ()          => api.get('/vehiculos/mis-pujas'),
   create:      (formData)  => {
     const token = localStorage.getItem('token');
-    return fetch(`${import.meta.env.VITE_API_URL}/vehiculos`, {
+    return fetch(`${API_BASE}/vehiculos`, {
       method: 'POST',
       headers: { Authorization: `Bearer ${token}` },
       body: formData, // multipart — NO JSON
@@ -22,7 +28,7 @@ export const vehiculoService = {
   getFotos:    (id)        => api.get(`/vehiculos/${id}/fotos`),
   addFotos:    (id, formData) => {
     const token = localStorage.getItem('token');
-    return fetch(`${import.meta.env.VITE_API_URL}/vehiculos/${id}/fotos`, {
+    return fetch(`${API_BASE}/vehiculos/${id}/fotos`, {
       method: 'POST',
       headers: { Authorization: `Bearer ${token}` },
       body: formData,

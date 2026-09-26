@@ -3,7 +3,11 @@
  * Todas las llamadas al backend pasan por aquí.
  */
 
-const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+const BASE_URL = import.meta.env.VITE_API_URL
+  ? import.meta.env.VITE_API_URL
+  : (typeof window !== 'undefined' && window.location.hostname !== 'localhost'
+      ? '/api'
+      : 'http://localhost:3000/api');
 
 /**
  * Obtiene el token JWT del localStorage

@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import './Carrusel.css';
 
-const API_URL = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:3000';
+const API_URL = import.meta.env.VITE_API_URL
+  ? import.meta.env.VITE_API_URL.replace('/api', '')
+  : (typeof window !== 'undefined' && window.location.hostname !== 'localhost' ? '' : 'http://localhost:3000');
 
 const Carrusel = ({ fotos = [] }) => {
   const [idx, setIdx] = useState(0);
