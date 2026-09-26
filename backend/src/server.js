@@ -28,8 +28,10 @@ io.on('connection', (socket) => {
   });
 });
 
-// Exportar io para usarlo en los controladores
+// Exportar app e io para compatibilidad con Vercel y standalone
+module.exports = app;
 module.exports.io = io;
+module.exports.server = server;
 
 // ── Iniciar servidor ──────────────────────────────────────────────────────────
 server.listen(PORT, () => {
