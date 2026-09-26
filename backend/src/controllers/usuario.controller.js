@@ -34,3 +34,5 @@ const UsuarioController = {
 };
 
 module.exports = UsuarioController;
+module.exports.default = UsuarioController;
+

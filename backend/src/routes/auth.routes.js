@@ -1,8 +1,17 @@
 const { Router } = require('express');
 const { body }   = require('express-validator');
-const AuthController = require('../controllers/auth.controller');
-const auth           = require('../middlewares/auth.middleware');
-const validate       = require('../middlewares/validate.middleware');
+
+const resolve = (m) => {
+  let res = m;
+  while (res && typeof res === 'object' && res.default && typeof res !== 'function') {
+    res = res.default;
+  }
+  return res;
+};
+
+const AuthController = resolve(require('../controllers/auth.controller'));
+const auth           = resolve(require('../middlewares/auth.middleware'));
+const validate       = resolve(require('../middlewares/validate.middleware'));
 
 const router = Router();
 
@@ -32,3 +41,5 @@ router.post('/login',
 router.get('/me', auth, AuthController.me);
 
 module.exports = router;
+module.exports.default = router;
+

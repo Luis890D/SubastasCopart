@@ -191,3 +191,5 @@ function calcularTiempoRestante(fecha_fin) {
 }
 
 module.exports = VehiculoController;
+module.exports.default = VehiculoController;
+

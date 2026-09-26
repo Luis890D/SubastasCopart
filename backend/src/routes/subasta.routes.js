@@ -1,8 +1,17 @@
 const { Router } = require('express');
 const { body }   = require('express-validator');
-const SubastaController = require('../controllers/subasta.controller');
-const authMiddleware    = require('../middlewares/auth.middleware');
-const validate          = require('../middlewares/validate.middleware');
+
+const resolve = (m) => {
+  let res = m;
+  while (res && typeof res === 'object' && res.default && typeof res !== 'function') {
+    res = res.default;
+  }
+  return res;
+};
+
+const SubastaController = resolve(require('../controllers/subasta.controller'));
+const authMiddleware    = resolve(require('../middlewares/auth.middleware'));
+const validate          = resolve(require('../middlewares/validate.middleware'));
 
 const router = Router();
 
@@ -33,3 +42,5 @@ router.put('/:id', authMiddleware, SubastaController.update);
 router.delete('/:id', authMiddleware, SubastaController.delete);
 
 module.exports = router;
+module.exports.default = router;
+

@@ -1,9 +1,18 @@
 const { Router } = require('express');
 const { body }   = require('express-validator');
-const VehiculoController = require('../controllers/vehiculo.controller');
-const auth               = require('../middlewares/auth.middleware');
-const validate           = require('../middlewares/validate.middleware');
-const upload             = require('../middlewares/upload.middleware');
+
+const resolve = (m) => {
+  let res = m;
+  while (res && typeof res === 'object' && res.default && typeof res !== 'function') {
+    res = res.default;
+  }
+  return res;
+};
+
+const VehiculoController = resolve(require('../controllers/vehiculo.controller'));
+const auth               = resolve(require('../middlewares/auth.middleware'));
+const validate           = resolve(require('../middlewares/validate.middleware'));
+const upload             = resolve(require('../middlewares/upload.middleware'));
 
 const router = Router();
 
@@ -69,3 +78,5 @@ router.post('/:id/pujas',
 );
 
 module.exports = router;
+module.exports.default = router;
+

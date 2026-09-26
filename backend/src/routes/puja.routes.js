@@ -1,8 +1,17 @@
 const { Router } = require('express');
 const { body }   = require('express-validator');
-const PujaController = require('../controllers/puja.controller');
-const authMiddleware  = require('../middlewares/auth.middleware');
-const validate        = require('../middlewares/validate.middleware');
+
+const resolve = (m) => {
+  let res = m;
+  while (res && typeof res === 'object' && res.default && typeof res !== 'function') {
+    res = res.default;
+  }
+  return res;
+};
+
+const PujaController = resolve(require('../controllers/puja.controller'));
+const authMiddleware  = resolve(require('../middlewares/auth.middleware'));
+const validate        = resolve(require('../middlewares/validate.middleware'));
 
 const router = Router({ mergeParams: true });
 
@@ -21,3 +30,5 @@ router.post(
 );
 
 module.exports = router;
+module.exports.default = router;
+
