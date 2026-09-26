@@ -30,8 +30,10 @@ io.on('connection', (socket) => {
 
 // Exportar app e io para compatibilidad con Vercel y standalone
 module.exports = app;
+module.exports.default = app;
 module.exports.io = io;
 module.exports.server = server;
+global.io = io;
 
 // ── Iniciar servidor (solo si se ejecuta directamente con `node src/server.js`) ─
 if (!process.env.VERCEL && require.main === module) {

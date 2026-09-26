@@ -160,16 +160,19 @@ const VehiculoController = {
       }
 
       // ── Emitir evento en tiempo real a todos en la sala ───────────────────
-      const { io } = require('../server');
+      const serverModule = require('../server');
+      const io = serverModule?.io || global.io;
       const vehiculo = await VehiculoModel.findById(vehiculo_id);
 
-      io.to(`subasta-${vehiculo_id}`).emit('nueva_puja', {
-        vehiculo_id,
-        monto_actual:     parseFloat(result.puja.monto),
-        total_pujas:      vehiculo?.total_pujas ?? 0,
-        tiempo_restante:  calcularTiempoRestante(vehiculo?.fecha_fin),
-        usuario_ganador:  req.user.id, // solo para comparar en el cliente, no se muestra
-      });
+      if (io) {
+        io.to(`subasta-${vehiculo_id}`).emit('nueva_puja', {
+          vehiculo_id,
+          monto_actual:     parseFloat(result.puja.monto),
+          total_pujas:      vehiculo?.total_pujas ?? 0,
+          tiempo_restante:  calcularTiempoRestante(vehiculo?.fecha_fin),
+          usuario_ganador:  req.user.id,
+        });
+      }
 
       res.status(201).json({ success: true, data: result.puja });
     } catch (err) {
